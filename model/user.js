@@ -21,7 +21,7 @@ const formSchema = new mongoose.Schema({
         type: Date,
         required: false,
     },
-});
+},{timestamps:true});
 
 
 const Form = mongoose.model('Form', formSchema);

@@ -1,5 +1,7 @@
+
 const nodemailer = require("nodemailer");
 require("dotenv").config();
+
 
 const transporter = nodemailer.createTransport({
     service : 'gmail',
@@ -17,9 +19,9 @@ const transporter = nodemailer.createTransport({
         name: "Samyam Gowda",
         address: "samyamgowda2003@gmail.com"
     }, 
-    to: "21ETCS002081@msruas.ac.in", // list of receivers
-    subject: "Hello macha", // Subject line
-    text: "Hello world? abdjbaacnjkabac ", // plain text body
+    to: "xxxxxxxxxxxx", // list of receivers
+    subject: "BOOK REMINDER!!!", // Subject line
+    text: "XXXXXXXXXXX", // plain text body
     html: "<b>Hello world?</b>", // html body
   };
 
@@ -33,4 +35,11 @@ const transporter = nodemailer.createTransport({
     }
     
   };
-  sendMail(transporter,mailOptions)
+  
+
+module.exports=
+{
+    sendMail,
+    mailOptions,
+    transporter
+}

@@ -1,72 +1,63 @@
 const express= require("express");
 const app =express();
-
+const userRouter = require("./routes/user.js");
 const  mongoose  = require("mongoose");
-const  Form = require("./model/user");
+const User = require("./model/user");
+
+
+
 const path= require("path");
+const { HandleConnection } = require("./connection.js");
+const { sendReminder } = require("./reminder.js");
+
+
 app.set('view engine', 'ejs');
 app.set("views",path.resolve("./views"));
+
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 
+HandleConnection("mongodb://localhost:27017/library")
+.then(()=>console.log("connected to Server"))
+.catch((err) => console.log(err));
 
 
-app.post("/",async (req,res)=>{
+app.use("/",userRouter);
+
+app.get("/",async (req,res)=>{
+
+   const res1 = await User.find({});
+   const arr = [];
+
+ for(let i=0; i< res1.length;i++){
     
-  const {uname, usn, title, issue, ret} = req.body;
-   const result = await Form.create({
-    uname:uname,
-    usn:usn,
-    title:title,
-    issue:issue,    
-    return:ret,
-   })
- console.log(result);
-    res.render("home")
-})
+      const  issuedate = res1[i]?.issue.toISOString().slice(0, 10);
+      const  returndate = res1[i]?.return.toISOString().slice(0, 10);
+       
+  arr.push({usn:res1[i]?.usn,isdate:issuedate,rdate:returndate});
 
-app.get("/",(req,res)=>{
-    res.render("home");
-})
+  sendReminder(res1[i]?.usn,returndate);
+ 
+setInterval(() => {
+  sendReminder(returndate);
+  console.log("checking for every 10sec");
+},10000); // Runs every 10sec
 
+
+   }
+  // console.log(arr)
+ 
+   return res.render("home");
+});
+
+  
 
 app.listen(9000,(()=>{
     console.log("server connected");
 }))
 
 
-
-
-mongoose.connect('mongodb://127.0.0.1:27017/library')
-.then(() => {
-    
-        console.log("Mongo Server connected");
-    })
-.catch(err => console.error('MongoDB connection error:', err));
-
-
-
-// const {sendEmail} = require("./email");
-
-// app.post("/", async (req, res) => {
-//   try {
-
-//     // Construct email ID using usn
-//     const emailId = `${usn}@msruas.ac.in`;
-
-//     // Send email
-//     await sendEmail(
-//       emailId,
-//       "Library Form Submission",
-//       `Hello ${uname},\n\nYour form submission was successful. Here are the details:\n\nTitle: ${title}\nIssue Date: ${issue}\nReturn Date: ${ret}\n\nThank you!`
-//     );
-
-//     res.render("home");
-//   } catch (error) {
-//     console.error("Error in POST route:", error);
-//     res.status(500).render("home", { error: "Failed to submit the form." });
-//   }
-// });
 
 
 
