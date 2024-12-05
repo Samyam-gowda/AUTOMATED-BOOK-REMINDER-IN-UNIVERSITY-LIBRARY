@@ -41,8 +41,8 @@ app.get("/",async (req,res)=>{
  
 setInterval(() => {
   sendReminder(returndate);
-  console.log("checking for every 10sec");
-},10000); // Runs every 10sec
+  console.log("checking for every 30sec");
+},30000); // Runs every 30sec
 
 
    }
