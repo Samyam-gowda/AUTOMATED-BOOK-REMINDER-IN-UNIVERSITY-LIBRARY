@@ -8,8 +8,8 @@ const {sendMail,mailOptions,transporter} = require("./newmail");
 // Function to check and send reminders
 function sendReminder(usn,returnDate) {
   
-    //    mailOptions.to = `${usn}@msruas.ac.in`;
-      mailOptions.to = `${usn}@sdmcujire.in`; 
+       mailOptions.to = `${usn}@msruas.ac.in`;
+    //   mailOptions.to = `${usn}@sdmcujire.in`; 
 
     console.log(mailOptions);
 
