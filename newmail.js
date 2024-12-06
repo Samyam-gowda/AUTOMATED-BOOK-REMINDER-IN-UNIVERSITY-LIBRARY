@@ -9,15 +9,15 @@ const transporter = nodemailer.createTransport({
     port: 587,
     secure: false, // true for port 465, false for other ports
     auth: {
-      user: "samyamgowda2003@gmail.com",
-      pass: "pqsg uzbp hyhm vukm",
+      user: "crramchandrancentrallibrary@gmail.com",
+      pass: "daxg yjti bbai vror",
     },
   });
 
   const mailOptions = {
     from: {
-        name: "Samyam Gowda",
-        address: "samyamgowda2003@gmail.com"
+        name: "CRR CENTRAL LIBRARY",
+        address: "crramchandrancentrallibrary@gmail.com"
     }, 
     to: "xxxxxxxxxxxx", // list of receivers
     subject: "BOOK REMINDER!!!", // Subject line
