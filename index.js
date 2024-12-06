@@ -37,10 +37,10 @@ app.get("/",async (req,res)=>{
        
   arr.push({usn:res1[i]?.usn,isdate:issuedate,rdate:returndate});
 
-  sendReminder(res1[i]?.usn,returndate);
+
  
 setInterval(() => {
-  sendReminder(returndate);
+  sendReminder(res1[i]?.usn,returndate);
   console.log("checking for every 30sec");
 },30000); // Runs every 30sec
 
