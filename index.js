@@ -3,6 +3,7 @@ const app =express();
 const userRouter = require("./routes/user.js");
 const  mongoose  = require("mongoose");
 const User = require("./model/user");
+app.use(express.static('public'));
 
 
 
