@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Users</title>
+    <style>
+        body {
+
+            background-color: #f4f4f9;
+            text-align: center;
+                font-family: Arial, sans-serif;
+                background-image: url('images/image.png');
+                background-size: cover; /* Ensures the image covers the entire background */
+                background-position: center; /* Centers the image */
+                background-attachment: fixed; /* Makes the background image stay fixed while scrolling */
+                background-repeat: no-repeat; /* Prevents the image from repeating */
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #007BFF;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .delete-btn:hover {
+            background-color: darkred;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>PENDING RETURNS```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Users</title>
+    <style>
+        body {
+            background-color: #f4f4f9;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-image: url('images/image.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #007BFF;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .delete-btn:hover {
+            background-color: darkred;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>PENDING RETURNS</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>USN</th>
+                    <th>Book Title</th>
+                    <th>Issue Date</th>
+                    <th>Return Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (pendingUsers.length > 0) { %>
+                    <% pendingUsers.forEach(user => { %>
+                        <tr>
+                            <td><%= user.uname %></td>
+                            <td><%= user.usn %></td>
+                            <td><%= user.title %></td>
+                            <td><%= user.issue %></td>
+                            <td><%= user.return %></td>
+                            <td><button class="delete-btn" onclick="deleteUser('<%= user._id %>')">Delete</button></td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="6">No pending returns found.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+        <a href="/" class="back-btn">Back to Home</a>
+        <div class="error-message" id="error-message"></div>
+    </div>
+
+    <script>
+        function deleteUser(userId) {
+            fetch(`/delete-user/${userId}`, { method: "DELETE" })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        document.getElementById('error-message').innerText = data.message;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting user:', error);
+                    document.getElementById('error-message').innerText = 'An error occurred while deleting the user.';
+                });
+        }
+    </script>
+
+</body>
+</html>
+```</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>USN</th>
+                    <th>Book Title</th>
+                    <th>Issue Date</th>
+                    <th>Return Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% pendingUsers.forEach(user => { %>
+                    <tr>
+                        <td><%= user.uname %></td>
+                        <td><%= user.usn %></td>
+                        <td><%= user.title %></td>
+                        <td><%= user.issue %></td>
+                        <td><%= user.return %></td>
+                        <td><button class="delete-btn" onclick="deleteUser('<%= user._id %>')">Delete</button></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+        <a href="/" class="back-btn">Back to Home</a>
+    </div>
+
+    <script>
+        function deleteUser(userId) {
+            fetch(`/delete-user/${userId}`, { method: "DELETE" })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload();
+                })
+                .catch(error => console.error('Error deleting user:', error));
+        }
+    </script>
+
+</body>
+</html>

@@ -1,71 +1,72 @@
+const moment = require('moment');
+const { sendMail, mailOptions, transporter } = require("./newmail");
+const User = require("./model/user"); // Import the User model
 
-const moment = require('moment'); // Install moment.js for date manipulation
+async function sendReminder(usn) {
+    try {
+        const books = await User.find({ usn }); // Find all books issued to this USN
 
-const {sendMail,mailOptions,transporter} = require("./newmail");
+        if (!books.length) {
+            console.log(`No books found for USN: ${usn}`);
+            return;
+        }
 
- 
+        const currentDate = moment();
+        let bookTableRows = "";
+        let returnDates = [];
 
-// Function to check and send reminders
-function sendReminder(usn,returnDate) {
-  
-       mailOptions.to = `${usn}@msruas.ac.in`;
-    //   mailOptions.to = `${usn}@sdmcujire.in`; 
+        books.forEach(book => {
+            const returnDate = moment(book.return).format("YYYY-MM-DD");
+            bookTableRows += `<tr><td>${book.title}</td><td>${returnDate}</td></tr>\n`;
+            returnDates.push(moment(book.return));
+        });
 
-    console.log(mailOptions);
+        const minReturnDate = moment.min(returnDates); // Get the earliest due date
+        const daysLeft = minReturnDate.diff(currentDate, 'days');
 
-    const currentDate = moment(); // Get current date
-    const daysLeft = moment(returnDate).diff(currentDate, 'days');
-    console.log(daysLeft); // Calculate days left
+        mailOptions.to = `${usn}@msruas.ac.in`;
+        mailOptions.html = `
+            <br><br>
+            <p>This is a gentle reminder that the book(s) you borrowed from the <strong>CRR CENTRAL LIBRARY</strong> are due for return soon.</p>
+            
+            <p><strong>Below are the details for your reference:</strong></p>
 
-    if (daysLeft <= 3 && daysLeft > 0) {
-        mailOptions.html= ` <br><br>This is a gentle reminder that the book(s) you borrowed from the "CRR CENTRAL LIBRARY" are due for return soon. 
-        <br><br>Below are the details for your reference:
-<br>
-Book Title(s):
-<br>
-[Book Title 1]<br>
-Due Date:  ${returnDate} <br><br>
+            <table border="1" cellspacing="0" cellpadding="8" style="border-collapse: collapse; width: 100%;">
+                <thead>
+                    <tr style="background-color: #007BFF; color: white;">
+                        <th>Book Title</th>
+                        <th>Due Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${bookTableRows}
+                </tbody>
+            </table>
 
-We kindly request that you return the book(s) by the due date to avoid any late fees or inconvenience for other members waiting to borrow these titles.<br><br><br>
+            <p><strong>Reminder:</strong> You have <strong>${daysLeft} day(s)</strong> left to return the book(s).</p>
 
-If you need to renew the book(s) or require assistance, feel free to reach out to us at crramchandrancentrallibrary@gmail.com.<br><br><br>
+            <p>If you need to renew the book(s), feel free to reach out to us at <a href="mailto:crramchandrancentrallibrary@gmail.com">crramchandrancentrallibrary@gmail.com</a>.</p>
 
-Reminder: You have ${daysLeft} day(s) left to return the book. <br>
+            <p>Best regards,</p>
+            <p><strong>CRR CENTRAL LIBRARY [RUAS]</strong><br>
+            <a href="mailto:crramchandrancentrallibrary@gmail.com">crramchandrancentrallibrary@gmail.com</a></p>
+        `;
 
-Thank you for your attention, and we look forward to serving you again!<br><br>
-
-Best regards,<br>
-[Your Name]<br>
-CRR CENTRAL LIBRARY [RUAS]<br>
-crramchandrancentrallibrary@gmail.com
-
-`;
-        sendMail(transporter,mailOptions)
-        console.log(`\n\nReminder: You have ${daysLeft} day(s) left to return the book.`);
-
-
-    } else if (daysLeft === 0) {
-        mailOptions.html="\n\nReminder: Today is the last day to return the book!";
-        sendMail(transporter,mailOptions);
-        console.log("Reminder: Today is the last day to return the book!");
-
-    } else if (daysLeft < 0) {
-        mailOptions.html="\n\nThe return date has already passed!";
-        sendMail(transporter,mailOptions)
-        console.log("The return date has already passed!");
+        if (daysLeft <= 3 && daysLeft > 0) {
+            sendMail(transporter, mailOptions);
+            console.log(`Reminder sent: ${daysLeft} day(s) left to return the books.`);
+        } else if (daysLeft === 0) {
+            mailOptions.html += "<p style='color: red;'><strong>Reminder: Today is the last day to return the book(s)!</strong></p>";
+            sendMail(transporter, mailOptions);
+            console.log("Reminder: Today is the last day to return the book(s)!");
+        } else if (daysLeft < 0) {
+            mailOptions.html += "<p style='color: red;'><strong>The return date has already passed!</strong></p>";
+            sendMail(transporter, mailOptions);
+            console.log("The return date has already passed!");
+        }
+    } catch (error) {
+        console.error("Error sending reminder:", error);
     }
 }
 
-
-// // Simulate a daily reminder check
-// // setInterval(() => {
-// //     sendReminder(issuedDate, returnDate);
-// // }, 24 * 60 * 60 * 1000); // Runs every 24 hours (daily)
-
-
-
-
-module.exports = {
-    sendReminder,  
-
-};
+module.exports = { sendReminder };
